@@ -10,7 +10,7 @@
           alt="NAH Logo"
           class="shrink mr-2"
           contain
-          src="./assets/logo_nah.png"
+          src="./assets/logo_nah_2.png"
           transition="scale-transition"
           width="60"
         />

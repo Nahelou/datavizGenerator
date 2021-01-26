@@ -25,7 +25,8 @@ exports.datavizExamples = [
     {
         "id": "scatter",
         "name": "Scatter Plot",
-        "type": "Correlation"
+        "type": "Correlation",
+        "img": require("../assets/charts/scatterplot.png")
     },
     {
         "id": "heatmap",
