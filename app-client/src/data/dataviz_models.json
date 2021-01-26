@@ -1,0 +1,66 @@
+{
+    "bubble": {
+        "name": "Bubble Plot",
+        "type": "Correlation"
+    },
+    "bar": {
+        "name": "Bar Plot",
+        "type": "Ranking"
+    },
+    "histogram": {
+        "name": "Histogram",
+        "type": "Distribution"
+    },
+    "line": {
+        "name": "Line Plot",
+        "type": "Evolution"
+    },
+    "scatter": {
+        "name": "Scatter Plot",
+        "type": "Correlation"
+    },
+    "heatmap": {
+        "name": "Heatmap",
+        "type": "Correlation"
+    },
+    "radar": {
+        "name": "Radar/Spider",
+        "type": "Ranking"
+    },
+    "wordCloud": {
+        "name": "Word Cloud",
+        "type": "Ranking"
+    },
+    "circularBar": {
+        "name": "Circular Bar Plot",
+        "type": "Ranking"
+    },
+    "treemap": {
+        "name": "Treemap",
+        "type": "Part of a whole"
+    },
+    "doughnut": {
+        "name": "Doughnut",
+        "type": "Part of a whole"
+    },
+    "pie": {
+        "name": "Pie Chart",
+        "type": "Part of a whole"
+    },
+    "packing": {
+        "name": "Circular Packing",
+        "type": "Part of a whole"
+    },
+    "chord": {
+        "name": "Chord diagram",
+        "type": "Flow"
+    },
+    "arc":{
+        "name": "Arc Diagram",
+        "type": "Flow"
+    },
+    "bubbleMap": {
+        "name": "Bubble Map",
+        "type": "Map"
+    }
+}
