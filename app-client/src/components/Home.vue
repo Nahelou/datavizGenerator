@@ -9,7 +9,7 @@
             <p class="subheading font-weight-regular">
             A simple Web interface to generate dataviz based on your data.
             </p>
-            <v-btn center color="success">
+            <v-btn @click="$router.push('dataload')" center color="success">
                 Let's build some datavisualisation
             </v-btn>
         </v-col>
