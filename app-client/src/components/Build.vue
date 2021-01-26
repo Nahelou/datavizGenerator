@@ -9,8 +9,9 @@
         </v-col>
         <v-col class="mb-5" cols="12">
             <input type="file" @change="onFileChange">
-            <v-card v-if="fileType">
-                Type de fichier 
+            <v-card v-if="fileType" :key="fileType">
+                <v-card-title>Type de fichier :  {{ fileType }}</v-card-title>
+                <p>{{ data }}</p>
             </v-card>
         </v-col>
     </v-row>
@@ -23,7 +24,8 @@ export default {
     data: () =>({
         filter : "Correlation",
         fileType : null,
-
+        data : null,
+        dataParsed : null,
     }),
     created(){
 
@@ -40,10 +42,38 @@ export default {
             reader.readAsText(files[0]);
 
             console.log(files[0].type);
-        },
+            },
         onReaderLoad(event){
-            console.log(event.target.result);
-    }
+            this.data = event.target.result;
+            this.parseDataset(this.data);
+            },
+        parseDataset(dataset){
+            switch(this.fileType) {
+                case "application/json" : {
+                    console.log();
+                    for(let i in JSON.parse(dataset)){
+                        console.log(i);
+                    }
+                    break;
+                }
+                case "text/csv" : {
+                    this.dataParsed = [];
+                    for(let i in dataset){
+                        this.dataParsed.push(i);
+                        console.log(i);
+                    }
+                    break;
+                }
+                case "application/geo+json" : {
+                    const features = JSON.parse(dataset).features;
+                    const featuresProperties = [];
+                    for(let i in features){
+                        featuresProperties.push(features[i].properties);
+                    }
+                    console.log(featuresProperties);
+                }
+            }
+        }
     },
 }
 </script>
