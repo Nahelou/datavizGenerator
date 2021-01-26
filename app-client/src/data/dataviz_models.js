@@ -14,7 +14,8 @@ exports.datavizExamples = [
     {
         "id": "histogram",
         "name": "Histogram",
-        "type": "Distribution"
+        "type": "Distribution",
+        "img": require("../assets/charts/histogram.png")
     },
     {
         "id": "line",
@@ -69,7 +70,8 @@ exports.datavizExamples = [
     {
         "id": "packing",
         "name": "Circular Packing",
-        "type": "Part of a whole"
+        "type": "Part of a whole",
+        "img": require("../assets/charts/circlepacking.png")
     },
     {
         "id": "chord",
@@ -79,7 +81,8 @@ exports.datavizExamples = [
     {
         "id": "arc",
         "name": "Arc Diagram",
-        "type": "Flow"
+        "type": "Flow",
+        "img": require("../assets/charts/arcdiagram.png")
     },
     {
         "id": "bubbleMap",
