@@ -12,7 +12,9 @@
         </v-col>
         <v-col class="mb-5" cols="12">
             <h2 class="headline font-weight-bold mb-3">Tha Dataviz's types supported : </h2>
-            <v-card v-for="dataviz in datavizModels" :key="dataviz.name"> 
+                    <v-select :items="filters" label="Types" v-model="filter" @change="updateDatavizExamples" >
+          </v-select>
+            <v-card v-for="dataviz in datavizExamples" :key="dataviz.name"> 
                 <v-card-title>{{dataviz.name}}</v-card-title>
                 <v-card-subtitle>{{dataviz.type}}</v-card-subtitle>
             </v-card>
@@ -22,13 +24,39 @@
 </template>
 
 <script>
-import datavizModels from "../data/dataviz_models"
+import data from "../data/dataviz_models.js"
 
 export default {
     name : "Home",
     data: () => ({
-        datavizModels : datavizModels,
+        filter : "Correlation",
+        filters : [
+            "Correlation",
+            "Evolution",
+            "Distribution",
+            "Flow",
+            "Map",
+            "Part of a whole",
+            "Ranking"
+            ], 
+        datavizModels : data.datavizExamples,
+        datavizExamples : null,
+
     }),
+    created(){
+        console.log(this.datavizModels);
+
+        this.datavizExamples = this.datavizModels.filter(i => i.type == this.filter);
+        console.log(this.datavizExamples);
+    },
+    mounted(){
+
+    },
+    methods: {
+        updateDatavizExamples(e){
+            this.datavizExamples = this.datavizModels.filter(i => i.type == e);
+                }
+    } 
 }
 </script>
 

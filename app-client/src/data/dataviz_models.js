@@ -1,66 +1,82 @@
-{
-    "bubble": {
+exports.datavizExamples = [
+    {
+        "id": "bubble",
         "name": "Bubble Plot",
         "type": "Correlation"
     },
-    "bar": {
+    {
+        "id": "bar",
         "name": "Bar Plot",
         "type": "Ranking"
     },
-    "histogram": {
+    {
+        "id": "histogram",
         "name": "Histogram",
         "type": "Distribution"
     },
-    "line": {
+    {
+        "id": "line",
         "name": "Line Plot",
         "type": "Evolution"
     },
-    "scatter": {
+    {
+        "id": "scatter",
         "name": "Scatter Plot",
         "type": "Correlation"
     },
-    "heatmap": {
+    {
+        "id": "heatmap",
         "name": "Heatmap",
         "type": "Correlation"
     },
-    "radar": {
+    {
+        "id": "radar",
         "name": "Radar/Spider",
         "type": "Ranking"
     },
-    "wordCloud": {
+    {
+        "id": "wordCloud",
         "name": "Word Cloud",
         "type": "Ranking"
     },
-    "circularBar": {
+    {
+        "id": "circularBar",
         "name": "Circular Bar Plot",
         "type": "Ranking"
     },
-    "treemap": {
+    {
+        "id": "treemap",
         "name": "Treemap",
         "type": "Part of a whole"
     },
-    "doughnut": {
+    {
+        "id": "doughnut",
         "name": "Doughnut",
         "type": "Part of a whole"
     },
-    "pie": {
+    {
+        "id": "pie",
         "name": "Pie Chart",
         "type": "Part of a whole"
     },
-    "packing": {
+    {
+        "id": "packing",
         "name": "Circular Packing",
         "type": "Part of a whole"
     },
-    "chord": {
+    {
+        "id": "chord",
         "name": "Chord diagram",
         "type": "Flow"
     },
-    "arc":{
+    {
+        "id": "arc",
         "name": "Arc Diagram",
         "type": "Flow"
     },
-    "bubbleMap": {
+    {
+        "id": "bubbleMap",
         "name": "Bubble Map",
         "type": "Map"
     }
-}
+];
