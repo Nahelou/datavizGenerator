@@ -2,12 +2,14 @@ exports.datavizExamples = [
     {
         "id": "bubble",
         "name": "Bubble Plot",
-        "type": "Correlation"
+        "type": "Correlation",
+        "img": require("../assets/charts/bubbleplot.png")
     },
     {
         "id": "bar",
         "name": "Bar Plot",
-        "type": "Ranking"
+        "type": "Ranking",
+        "img": require("../assets/charts/barplot.png")
     },
     {
         "id": "histogram",
@@ -17,7 +19,8 @@ exports.datavizExamples = [
     {
         "id": "line",
         "name": "Line Plot",
-        "type": "Evolution"
+        "type": "Evolution",
+        "img": require("../assets/charts/line.png")
     },
     {
         "id": "scatter",
@@ -32,7 +35,8 @@ exports.datavizExamples = [
     {
         "id": "radar",
         "name": "Radar/Spider",
-        "type": "Ranking"
+        "type": "Ranking",
+        "img": require("../assets/charts/radar.png")
     },
     {
         "id": "wordCloud",
@@ -52,12 +56,14 @@ exports.datavizExamples = [
     {
         "id": "doughnut",
         "name": "Doughnut",
-        "type": "Part of a whole"
+        "type": "Part of a whole",
+        "img": require("../assets/charts/doughnut.png")
     },
     {
         "id": "pie",
         "name": "Pie Chart",
-        "type": "Part of a whole"
+        "type": "Part of a whole",
+        "img": require("../assets/charts/pie.png")
     },
     {
         "id": "packing",

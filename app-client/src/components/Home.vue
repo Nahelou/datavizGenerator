@@ -12,11 +12,18 @@
         </v-col>
         <v-col class="mb-5" cols="12">
             <h2 class="headline font-weight-bold mb-3">Tha Dataviz's types supported : </h2>
-                    <v-select :items="filters" label="Types" v-model="filter" @change="updateDatavizExamples" >
+                    <v-select :items="filters" label="Type" v-model="filter" @change="updateDatavizExamples" >
           </v-select>
             <v-card v-for="dataviz in datavizExamples" :key="dataviz.name"> 
                 <v-card-title>{{dataviz.name}}</v-card-title>
                 <v-card-subtitle>{{dataviz.type}}</v-card-subtitle>
+                        <img v-if="dataviz.img"
+                        :alt="dataviz.name"
+                        class="shrink mr-2"
+                        contain
+                        :src="dataviz.img"
+                        width="500"
+                        />
             </v-card>
         </v-col>
     </v-row>
@@ -44,10 +51,7 @@ export default {
 
     }),
     created(){
-        console.log(this.datavizModels);
-
         this.datavizExamples = this.datavizModels.filter(i => i.type == this.filter);
-        console.log(this.datavizExamples);
     },
     mounted(){
 
