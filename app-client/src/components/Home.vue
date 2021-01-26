@@ -9,8 +9,12 @@
             <p class="subheading font-weight-regular">
             A simple Web interface to generate dataviz based on your data.
             </p>
+            <v-btn center color="success">
+                Let's build some datavisualisation
+            </v-btn>
         </v-col>
         <v-col class="mb-5" cols="12">
+
             <h2 class="headline font-weight-bold mb-3">Tha Dataviz's types supported : </h2>
                     <v-select :items="filters" label="Type" v-model="filter" @change="updateDatavizExamples" >
           </v-select>
