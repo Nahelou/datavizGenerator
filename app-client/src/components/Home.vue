@@ -52,7 +52,6 @@ export default {
             ], 
         datavizModels : data.datavizExamples,
         datavizExamples : null,
-
     }),
     created(){
         this.datavizExamples = this.datavizModels.filter(i => i.type == this.filter);
@@ -63,8 +62,8 @@ export default {
     methods: {
         updateDatavizExamples(e){
             this.datavizExamples = this.datavizModels.filter(i => i.type == e);
-                }
-    } 
+        },
+    },
 }
 </script>
 
