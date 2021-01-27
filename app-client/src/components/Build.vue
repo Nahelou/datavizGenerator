@@ -11,7 +11,7 @@
             <input type="file" @change="onFileChange">
             <v-card v-if="fileType" :key="fileType">
                 <v-card-title>Type de fichier :  {{ fileType }}</v-card-title>
-                <p>{{ data }}</p>
+                <p>{{ fields }}</p>
             </v-card>
         </v-col>
     </v-row>
@@ -30,6 +30,11 @@ export default {
         data : null,
         dataParsed : null,
         fields : null,
+        fileTypesSupported : [
+            "application/json",
+            "application/geo+json",
+            "text/csv",
+        ],
     }),
     created(){
 
@@ -46,8 +51,11 @@ export default {
             if(this.fileType == "text/csv"){
                 reader.readAsBinaryString(files[0]);
             }
-            else {
+            else if(this.fileTypesSupported.includes(this.fileType)){
                 reader.readAsText(files[0]);
+            }
+            else{
+                alert(`Sorry, type ${this.fileType} not supported: only CSV, Json and Geojon are for the moment`)
             }
             console.log(files[0].type);
             },
@@ -66,15 +74,14 @@ export default {
                 case "application/json" : {
                     this.dataParsed = [];
                     let nbFields = 0;
-                    this.fields = [];
                         if(!("features" in JSON.parse(dataset))){
                             for(let i of JSON.parse(dataset)){
                                 this.dataParsed.push(i);
                                 if(Object.keys(i).length > nbFields){
                                     nbFields = Object.keys(i).length;
-                                    this.fields = []; 
+                                    this.fields = {}; 
                                     for(let f in i){
-                                        this.fields.push(f);
+                                        this.fields[f] = typeof i[f];
                                     }
                                 }
                             }
@@ -84,10 +91,9 @@ export default {
                                 this.dataParsed.push(i.properties);
                                 if(Object.keys(i.properties).length > nbFields){
                                     nbFields = Object.keys(i.properties).length;
-                                    this.fields = []; 
+                                    this.fields = {};
                                     for(let f in i.properties){
-                                        console.log(f);
-                                        this.fields.push(f);
+                                        this.fields[f] = typeof i.properties[f];
                                     }
                                 }
                             }
@@ -97,16 +103,22 @@ export default {
                 case "text/csv" : {
                     this.dataParsed = [];
                     const columns = dataset[0];
-                    this.fields = columns;
+                    let fields = {};
                     for(let i of dataset){
                         const feature = {};
                         if(columns != i){
                             i.forEach((el, index) => {
                                 feature[columns[index]] = el;
                             });
+                            if(!Object.keys(fields).length > 0 && columns.length == i.length){
+                                i.forEach((el, index) => {
+                                fields[columns[index]] = typeof el;
+                            });
+                            }
                         }
                         this.dataParsed.push(feature);
                     }
+                    this.fields = fields;
                     break;
                 }
                 case "application/geo+json" : {
@@ -117,15 +129,16 @@ export default {
                         featuresProperties.push(i.properties);
                         if(Object.keys(i.properties).length > nbFields){
                             nbFields = Object.keys(i.properties).length;
-                            this.fields = []; 
+                            this.fields = {}; 
                             for(let f in i.properties){
-                                this.fields.push(f);
+                                this.fields[f] = typeof i.properties[f]
                             }
                         }
                     }
                     this.dataParsed = featuresProperties;
                     break;
                 }
+                default: alert("File not supported")
             }
         },
         parseCsv(data){
