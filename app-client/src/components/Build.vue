@@ -1,29 +1,34 @@
 <template>
     <v-container>
-        <v-btn @click="$router.push('dataparser')" center color="yellow">
+        <v-btn @click="$router.push('dataparser')" center color="yellow" class="ma-10">
         Return at the first step
     </v-btn>
-    <h1 v-if="fileType && dataset">{{fileType}} : {{dataset.length}} rows</h1>
-    <h2 class="headline font-weight-bold mb-3">Select your dataviz : </h2>
+    <h2 v-if="fileType && dataset" class="font-weight-light mb-10">Dataset : {{dataset.length}} rows</h2>
     <div v-if="!datavizSelected">
+        <h2 class="headline font-weight-light mb-5">Select your dataviz : </h2>
         <v-select :items="filters" label="Type" v-model="filter" @change="updateDatavizExamples" >
           </v-select>
-            <v-card v-for="dataviz in datavizExamples" :key="dataviz.name"> 
+            <v-card v-for="dataviz in datavizExamples" :key="dataviz.name" class="ma-2"> 
                 <v-card-title>{{dataviz.name}}</v-card-title>
                 <v-card-subtitle>{{dataviz.type}}</v-card-subtitle>
                         <img v-if="dataviz.img"
                         :alt="dataviz.name"
-                        class="shrink mr-2"
+                        class="shrink ma-5"
                         contain
                         :src="dataviz.img"
                         width="500"
                         />
-                <v-btn @click="selectDataviz(dataviz.id)" right color="success">
+                <v-btn @click="selectDataviz(dataviz.id)" right color="success" class="ma-10">
                 Build {{dataviz.name}}
                 </v-btn>
             </v-card>
     </div>
-    <component v-if="datavizSelected" v-bind:is="component" />
+    <v-card v-if="datavizSelected" class="pa-10 ma-5">
+        <v-btn @click="backAtDatavizSelector" right color="warning" class="mb-10">
+            Back
+       </v-btn>
+        <component v-bind:is="component" />
+    </v-card>
     </v-container>
 </template>
 
@@ -82,7 +87,10 @@ export default {
         selectDataviz($event){
             this.component = this.datavizComponents[$event];
             this.datavizSelected = $event;
-        }
+            },
+        backAtDatavizSelector(){
+            this.datavizSelected = null;
+            },
     },
     components : {
         Bubble,
