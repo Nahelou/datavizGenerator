@@ -19,6 +19,9 @@
 </template>
 
 <script>
+// import * as d3 from "d3";
+
+
 export default {
     name : "Build",
     data: () =>({
@@ -39,18 +42,26 @@ export default {
             var reader = new FileReader();
             reader.onload = this.onReaderLoad;
             this.fileType = files[0].type;
-            reader.readAsText(files[0]);
-
+            if(this.fileType == "text/csv"){
+                reader.readAsBinaryString(files[0]);
+            }
+            else {
+                reader.readAsText(files[0]);
+            }
             console.log(files[0].type);
             },
         onReaderLoad(event){
             this.data = event.target.result;
-            this.parseDataset(this.data);
+            if(this.fileType == "text/csv"){
+                this.parseDataset(this.parseCsv(this.data));
+            }
+            else{
+                this.parseDataset(this.data);
+            }
             },
         parseDataset(dataset){
             switch(this.fileType) {
                 case "application/json" : {
-                    console.log();
                     for(let i in JSON.parse(dataset)){
                         console.log(i);
                     }
@@ -58,9 +69,15 @@ export default {
                 }
                 case "text/csv" : {
                     this.dataParsed = [];
-                    for(let i in dataset){
-                        this.dataParsed.push(i);
-                        console.log(i);
+                    const columns = dataset[0];
+                    for(let i of dataset){
+                        const feature = {};
+                        if(columns != i){
+                            i.forEach((el, index) => {
+                                feature[columns[index]] = el;
+                            });
+                        }
+                        this.dataParsed.push(feature)
                     }
                     break;
                 }
@@ -70,10 +87,22 @@ export default {
                     for(let i in features){
                         featuresProperties.push(features[i].properties);
                     }
-                    console.log(featuresProperties);
+                    this.dataParsed = featuresProperties;
                 }
             }
-        }
+        },
+        parseCsv(data){
+            let parsedata = [];
+
+            let newLinebrk = data.split("\n");
+            for(let i = 0; i < newLinebrk.length; i++) {
+                parsedata.push(newLinebrk[i].split(","))
+            }
+            return parsedata;
+        },
+        uploadDealcsv () {
+
+        },
     },
 }
 </script>
