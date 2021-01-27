@@ -29,6 +29,7 @@ export default {
         fileType : null,
         data : null,
         dataParsed : null,
+        fields : null,
     }),
     created(){
 
@@ -64,14 +65,31 @@ export default {
             switch(this.fileType) {
                 case "application/json" : {
                     this.dataParsed = [];
+                    let nbFields = 0;
+                    this.fields = [];
                         if(!("features" in JSON.parse(dataset))){
                             for(let i of JSON.parse(dataset)){
                                 this.dataParsed.push(i);
+                                if(Object.keys(i).length > nbFields){
+                                    nbFields = Object.keys(i).length;
+                                    this.fields = []; 
+                                    for(let f in i){
+                                        this.fields.push(f);
+                                    }
+                                }
                             }
                         }
-                        else{
+                        else {
                             for(let i of JSON.parse(dataset).features){
                                 this.dataParsed.push(i.properties);
+                                if(Object.keys(i.properties).length > nbFields){
+                                    nbFields = Object.keys(i.properties).length;
+                                    this.fields = []; 
+                                    for(let f in i.properties){
+                                        console.log(f);
+                                        this.fields.push(f);
+                                    }
+                                }
                             }
                         }
                     break;
@@ -79,6 +97,7 @@ export default {
                 case "text/csv" : {
                     this.dataParsed = [];
                     const columns = dataset[0];
+                    this.fields = columns;
                     for(let i of dataset){
                         const feature = {};
                         if(columns != i){
@@ -86,17 +105,26 @@ export default {
                                 feature[columns[index]] = el;
                             });
                         }
-                        this.dataParsed.push(feature)
+                        this.dataParsed.push(feature);
                     }
                     break;
                 }
                 case "application/geo+json" : {
                     const features = JSON.parse(dataset).features;
                     const featuresProperties = [];
-                    for(let i in features){
-                        featuresProperties.push(features[i].properties);
+                    let nbFields = 0;
+                    for(let i of features){
+                        featuresProperties.push(i.properties);
+                        if(Object.keys(i.properties).length > nbFields){
+                            nbFields = Object.keys(i.properties).length;
+                            this.fields = []; 
+                            for(let f in i.properties){
+                                this.fields.push(f);
+                            }
+                        }
                     }
                     this.dataParsed = featuresProperties;
+                    break;
                 }
             }
         },
