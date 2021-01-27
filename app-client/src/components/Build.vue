@@ -1,6 +1,6 @@
 <template>
 <v-container>
-    <v-btn @click="$router.push('/')" center color="success">
+    <v-btn @click="$router.push('/')" center color="yellow">
         Return home
     </v-btn>
     <v-row class="text-center">
@@ -11,7 +11,29 @@
             <input type="file" @change="onFileChange">
             <v-card v-if="fileType" :key="fileType">
                 <v-card-title>Type de fichier :  {{ fileType }}</v-card-title>
-                <p>{{ fields }}</p>
+                <v-simple-table>
+                    <template v-slot:default>
+                    <thead>
+                        <tr>
+                        <th id="field" class="text-left">
+                            Field
+                        </th>
+                        <th id="type" class="text-left">
+                            Type
+                        </th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="fields">
+                        <tr class="text-left"
+                        v-for="field in Object.keys(fields)"
+                        :key="field"
+                        >
+                        <td>{{ field }}</td>
+                        <td>{{ fields[field] }}</td>
+                        </tr>
+                    </tbody>
+                    </template>
+                </v-simple-table>
             </v-card>
         </v-col>
     </v-row>
