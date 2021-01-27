@@ -5,6 +5,7 @@
           </v-select>
           <v-select :items="Object.keys(featuresFields)" label="y value" @change="getYValue" >
           </v-select>
+          <div id="bubbleChart"></div>
     </v-container>
 </template>
 
@@ -34,11 +35,23 @@ export default {
   },
   created() {
     this.dataArray = this.$props.dataParsed;
-    this.featuresFields= this.$props.fields
+    this.featuresFields= this.$props.fields;
   },
 mounted() {
       console.log(JSON.parse(JSON.stringify(this.dataArray)));
       console.log(JSON.parse(JSON.stringify(this.featuresFields)));
+      // this.createChart("planet-chart2", this.bubbleChartData);
+  },
+  methods: {
+    createChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options,
+      });
+    },
+    getChartData(){
       let data = [];
       let dataToScale = [];
       for(let i in this.dataArray){
@@ -50,10 +63,10 @@ mounted() {
           dataToScale.push(this.dataArray[i].sum2019)
           data.push(dataOthers);
       }
-        let maxOut = d3.max(Object.values(dataToScale));
-        let meanOut = d3.mean(Object.values(dataToScale));
-        let minOut = d3.min(Object.values(dataToScale));
-        let valued3 = d3
+      let maxOut = d3.max(Object.values(dataToScale));
+      let meanOut = d3.mean(Object.values(dataToScale));
+      let minOut = d3.min(Object.values(dataToScale));
+      let valued3 = d3
           .scaleLinear(10)
           .domain([minOut, meanOut, maxOut])
           .range([5, 15, 30, 60]);
@@ -259,17 +272,13 @@ mounted() {
         },
         },
       };
-        this.createChart("planet-chart2", this.bubbleChartData);
-  },
-  methods: {
-    createChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
-      new Chart(ctx, {
-        type: chartData.type,
-        data: chartData.data,
-        options: chartData.options,
-      });
     },
+    getXValue(e){
+      this.fieldX = e;
+    },
+    getYValue(e){
+      this.fieldY = e;
+    }
   },
 };
 </script>
