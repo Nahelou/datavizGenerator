@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-btn @click="$router.push('dataparser')" center color="yellow" class="ma-10">
+        <v-btn @click="$router.push('dataparser')" center color="primary" class="ma-10">
         Return at the first step
     </v-btn>
     <h2 v-if="fileType && dataset" class="font-weight-light mb-10">Dataset : {{dataset.length}} rows</h2>
@@ -25,9 +25,12 @@
     </div>
     <v-card v-if="datavizSelected" class="pa-10 ma-5">
         <v-btn @click="backAtDatavizSelector" right color="warning" class="mb-10">
+            <v-icon dark left>
+                mdi-arrow-left
+            </v-icon>
             Back
        </v-btn>
-        <component v-bind:is="component" />
+        <component v-bind:is="component" :dataParsed="dataset" :fields="featuresFields" />
     </v-card>
     </v-container>
 </template>
@@ -49,6 +52,9 @@ export default {
         },
         dataParsed: {
             type: Array,
+        },
+        fields: {
+            type: Object,
         },
     },
     data: () => ({
@@ -78,6 +84,8 @@ export default {
     created(){
         this.fileType = this.$props.fileType;
         this.dataset = this.$props.dataParsed;
+        this.featuresFields = this.$props.fields;
+
         this.datavizExamples = this.datavizModels.filter(i => i.type == this.filter);
     },
     methods: {

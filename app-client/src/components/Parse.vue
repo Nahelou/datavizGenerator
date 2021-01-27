@@ -16,6 +16,7 @@
                         params: {
                             fileType: fileType,
                             dataParsed: dataParsed,
+                            fields: fields,
                         }
                         })"
                         right color="success">
