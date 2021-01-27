@@ -59,12 +59,21 @@ export default {
                 this.parseDataset(this.data);
             }
             },
+        /// GET THE DATA OF data() Observer : JSON.parse(JSON.stringify(obj))
         parseDataset(dataset){
             switch(this.fileType) {
                 case "application/json" : {
-                    for(let i in JSON.parse(dataset)){
-                        console.log(i);
-                    }
+                    this.dataParsed = [];
+                        if(!("features" in JSON.parse(dataset))){
+                            for(let i of JSON.parse(dataset)){
+                                this.dataParsed.push(i);
+                            }
+                        }
+                        else{
+                            for(let i of JSON.parse(dataset).features){
+                                this.dataParsed.push(i.properties);
+                            }
+                        }
                     break;
                 }
                 case "text/csv" : {
