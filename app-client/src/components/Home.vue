@@ -1,8 +1,16 @@
 <template>
   <v-container>
     <v-row class="text-center">
-        <v-col class="mb-4">
-            <h1 class="display-2 font-weight-bold mb-3">
+        <v-col cols="12">
+        <v-img
+          :src="require('../assets/logo_nah_5.png')"
+          class="ma-5"
+          contain
+          height="200"
+        />
+      </v-col>
+        <v-col class="ma-5">
+            <h1 class="display-2 font-weight-bold ma-3">
             Welcome to Dataviz Generator
             </h1>
 
@@ -13,7 +21,7 @@
                 Let's start
             </v-btn>
         </v-col>
-        <v-col class="mb-5" cols="12">
+        <!-- <v-col class="mb-5" cols="12">
 
             <h2 class="headline font-weight-bold mb-3">The Dataviz's types supported : </h2>
                     <v-select :items="filters" label="Type" v-model="filter" @change="updateDatavizExamples" >
@@ -29,7 +37,7 @@
                         width="500"
                         />
             </v-card>
-        </v-col>
+        </v-col> -->
     </v-row>
   </v-container>
 </template>

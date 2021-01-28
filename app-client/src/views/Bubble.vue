@@ -5,7 +5,14 @@
           </v-select>
           <v-select :items="Object.keys(featuresFields)" label="y value" @change="getYValue" >
           </v-select>
-          <div id="bubbleChart"></div>
+          <v-select :items="Object.keys(featuresFields)" label="Label" @change="getLabelValue" >
+          </v-select>
+          <v-select :items="Object.keys(featuresFields)" label="Size" @change="getSizeValue" >
+          </v-select>
+        <v-btn @click="processDataviz" right color="success" class="mb-10">
+            Process
+       </v-btn>
+       <canvas id="bubbleChart"></canvas>
     </v-container>
 </template>
 
@@ -31,6 +38,8 @@ export default {
         featuresFields: this.$props.fields,
         fieldX: null,
         fieldY: null,
+        fieldLabel: null,
+        fieldSize: null,
         };
   },
   created() {
@@ -40,7 +49,6 @@ export default {
 mounted() {
       console.log(JSON.parse(JSON.stringify(this.dataArray)));
       console.log(JSON.parse(JSON.stringify(this.featuresFields)));
-      // this.createChart("planet-chart2", this.bubbleChartData);
   },
   methods: {
     createChart(chartId, chartData) {
@@ -54,13 +62,14 @@ mounted() {
     getChartData(){
       let data = [];
       let dataToScale = [];
-      for(let i in this.dataArray){
+      console.log(this.fieldY)
+      for(let i = 0; i < this.dataArray.length; i++){
           let dataOthers = {};
-          dataOthers.y = this.dataArray[i].sum2019
-          dataOthers.x = this.dataArray[i].pct_evol_eurostats
-          dataOthers.label = this.dataArray[i].ville
-          dataOthers.pass = this.dataArray[i].sum2019
-          dataToScale.push(this.dataArray[i].sum2019)
+          dataOthers.y = this.dataArray[i][this.fieldY];
+          dataOthers.x = this.dataArray[i][this.fieldX];
+          dataOthers.label = this.dataArray[i][this.fieldLabel];
+          dataOthers.pass = this.dataArray[i][this.fieldSize];
+          dataToScale.push(this.dataArray[i][this.fieldSize]);
           data.push(dataOthers);
       }
       let maxOut = d3.max(Object.values(dataToScale));
@@ -78,25 +87,8 @@ mounted() {
       type: "bubble",
       data: {
         datasets: [
-          {
-          label: ["Test"],
-          data : [{
-            y: this.dataSelected.sum2019,
-            x: this.dataSelected.pct_evol_eurostats,
-            r: valued3(this.dataSelected.sum2019),
-            label: this.dataSelected.ville,
-            pass: this.dataSelected.sum2019
-          }],
-          backgroundColor: [
-                "rgba(255, 0, 102,.5)",
-              ],
-              borderColor: [
-                "rgba(255, 0, 102)",
-              ],
-              borderWidth: 1,
-          },
         {
-          label:"Autres villes aéroportuaires",
+          label:"Dataset",
           data,
             backgroundColor: [
               "rgba(0, 102, 255,.5)",
@@ -174,7 +166,7 @@ mounted() {
               {
                 scaleLabel : {
                   display: true,
-                  labelString: 'Nombre de passagers transportés (intra et hors France) en 2019',
+                  labelString: this.fieldY,
                   fontColor: 'black'
                 },
                 ticks: {
@@ -188,7 +180,7 @@ mounted() {
               {
                 scaleLabel :{
                   display: true,
-                  labelString: 'Evolution du nombre de passagers transportés (intra et hors France) de 2010 à 2019',
+                  labelString: this.fieldX,
                   fontColor: 'black'
                 },
                 ticks: {
@@ -206,12 +198,12 @@ mounted() {
                       test = e;
                     }
                   });
-                    var label = test.label || ' : <br>Nombre de passagers en 2019 : ' + test.pass;
+                    var label = test.label || ' : <br>' + this.fieldSize + ' : ' + test.pass;
                     if (label) {
                         label += ': ';
                     }
-                    label += "Evolution du nb de passagers totaux (intra et hors France) depuis 2010 : "+tooltipItem.xLabel+ "%";
-                    label += ";  Nombre de passagers (intra et hors France) en 2019 : " + test.pass;
+                    label += this.fieldX + " : " + tooltipItem.xLabel;
+                    label += ";" + this.fieldY + " : " + tooltipItem.yLabel;
                     return label;
                 },
             },
@@ -278,6 +270,17 @@ mounted() {
     },
     getYValue(e){
       this.fieldY = e;
+    },
+    getLabelValue(e){
+      this.fieldLabel = e;
+    },
+    getSizeValue(e){
+      this.fieldSize = e;
+    },
+    processDataviz(){
+    this.getChartData();
+    console.log(this.bubbleChartData);
+    this.createChart("bubbleChart", this.bubbleChartData);
     }
   },
 };
