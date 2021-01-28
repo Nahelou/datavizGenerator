@@ -9,10 +9,16 @@
           </v-select>
           <v-select :items="Object.keys(featuresFields)" label="Size" @change="getSizeValue" >
           </v-select>
-          <div>
+          <div v-if="!isPackedData">
              <label for="colorpicker" class="mb-5" >Color :</label>
              <input type="color" id="colorpicker" value="#0066ff" @change="changeColor" >
           </div>
+                 <v-checkbox
+      label="Color based on a field" 
+      @change="isPacked"></v-checkbox>
+          <v-select v-if="isPackedData" :items="Object.keys(featuresFields)" label="Color field" @change="getSizeValue" >
+          </v-select>
+          
         <v-btn @click="processDataviz" right color="success" class="mb-10">
             Process
        </v-btn>
@@ -45,6 +51,7 @@ export default {
         fieldLabel: null,
         fieldSize: null,
         color: "rgba(0, 102, 255,.5)",
+        isPackedData : false,
         };
   },
   created() {
@@ -251,6 +258,12 @@ export default {
       this.getChartData();
       document.getElementById("bubbleChart").innerHTML = "";
       this.createChart("bubbleChart", this.bubbleChartData);
+    },
+    setPackingField(e){
+      this.packingField = e;
+    },
+    isPacked(){
+      this.isPackedData = !this.isPackedData;
     }
   },
 };
