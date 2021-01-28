@@ -16,7 +16,7 @@
                  <v-checkbox
       label="Color based on a field" 
       @change="isPacked"></v-checkbox>
-          <v-select v-if="isPackedData" :items="Object.keys(featuresFields)" label="Color field" @change="getSizeValue" >
+          <v-select v-if="isPackedData" :items="Object.keys(featuresFields)" label="Color field" @change="setPackingField" >
           </v-select>
           
         <v-btn @click="processDataviz" right color="success" class="mb-10">
@@ -52,6 +52,7 @@ export default {
         fieldSize: null,
         color: "rgba(0, 102, 255,.5)",
         isPackedData : false,
+        packingField: null,
         };
   },
   created() {
@@ -70,43 +71,34 @@ export default {
       });
     },
     getChartData(){
-      let data = [];
-      let dataToScale = [];
+      // let data = [];
+      // let dataToScale = [];
       let that = this;
-      console.log(this.fieldY)
-      for(let i = 0; i < this.dataArray.length; i++){
-          let dataOthers = {};
-          dataOthers.y = this.dataArray[i][this.fieldY];
-          dataOthers.x = this.dataArray[i][this.fieldX];
-          dataOthers.label = this.dataArray[i][this.fieldLabel];
-          dataOthers.pass = this.dataArray[i][this.fieldSize];
-          dataToScale.push(this.dataArray[i][this.fieldSize]);
-          data.push(dataOthers);
-      }
-      let maxOut = d3.max(Object.values(dataToScale));
-      let meanOut = d3.mean(Object.values(dataToScale));
-      let minOut = d3.min(Object.values(dataToScale));
-      let valued3 = d3
-          .scaleLinear(10)
-          .domain([minOut, meanOut, maxOut])
-          .range([5, 10, 20, 50]);
-      for(let j=0; j<data.length;j++){
-        data[j].r = valued3(data[j].pass);
-      }
-      this.dataOthers = data;
+      // for(let i = 0; i < this.dataArray.length; i++){
+      //     let dataOthers = {};
+      //     dataOthers.y = this.dataArray[i][this.fieldY];
+      //     dataOthers.x = this.dataArray[i][this.fieldX];
+      //     dataOthers.label = this.dataArray[i][this.fieldLabel];
+      //     dataOthers.pass = this.dataArray[i][this.fieldSize];
+      //     dataToScale.push(this.dataArray[i][this.fieldSize]);
+      //     data.push(dataOthers);
+      // }
+      // let maxOut = d3.max(Object.values(dataToScale));
+      // let meanOut = d3.mean(Object.values(dataToScale));
+      // let minOut = d3.min(Object.values(dataToScale));
+      // let valued3 = d3
+      //     .scaleLinear(10)
+      //     .domain([minOut, meanOut, maxOut])
+      //     .range([5, 10, 20, 50]);
+      // for(let j=0; j<data.length;j++){
+      //   data[j].r = valued3(data[j].pass);
+      // }
+      // this.dataOthers = data;
+      let d = that.getDatasetsForChart();
       this.bubbleChartData = {
       type: "bubble",
       data: {
-        datasets: [
-        {
-          label:"Dataset",
-          data,
-            backgroundColor: this.colors,
-              borderColor: [
-              ],
-              borderWidth: 1,
-          },
-        ],
+        datasets: d,
       },
         options: {
           legend: {
@@ -261,10 +253,106 @@ export default {
     },
     setPackingField(e){
       this.packingField = e;
+      this.packingFieldData = new Set();
+      for(let i = 0; i < this.dataArray.length; i++){
+        if(this.dataArray[i][e]){
+          this.packingFieldData.add(this.dataArray[i][e]);
+        }
+      }
     },
     isPacked(){
+      if(this.packingField){
+        this.packingField = null;
+      }
       this.isPackedData = !this.isPackedData;
-    }
+    },
+    getDatasetsForChart(){
+      let datasets = [];
+      let dataToScale = [];
+      if(this.packingField == null){
+        for(let i = 0; i < this.dataArray.length; i++){
+          let dataOthers = {};
+          dataOthers.y = this.dataArray[i][this.fieldY];
+          dataOthers.x = this.dataArray[i][this.fieldX];
+          dataOthers.label = this.dataArray[i][this.fieldLabel];
+          dataOthers.pass = this.dataArray[i][this.fieldSize];
+          dataToScale.push(this.dataArray[i][this.fieldSize]);
+          datasets.push(dataOthers);
+        }
+        let maxOut = d3.max(Object.values(dataToScale));
+        let meanOut = d3.mean(Object.values(dataToScale));
+        let minOut = d3.min(Object.values(dataToScale));
+        let valued3 = d3
+            .scaleLinear(10)
+            .domain([minOut, meanOut, maxOut])
+            .range([5, 10, 20, 50]);
+        for(let j=0; j<datasets.length;j++){
+          datasets[j].r = valued3(datasets[j].pass);
+        }
+        this.dataOthers = datasets;
+        let dataset = [
+        {
+          label:"Dataset",
+          data : datasets,
+          backgroundColor: this.colors,
+              borderColor: [],
+              borderWidth: 1,
+          },
+        ];
+        console.log(dataset);
+        return dataset;
+      }
+      else{
+        let datasetsPackedToChartProp = [];
+        let datasetPacked =  {};
+        this.packingFieldData.forEach(field => {
+          datasetPacked[field] = [];
+        })
+
+        for(let i = 0; i < this.dataArray.length; i++){
+          let dataPacked = {};
+          dataPacked.y = this.dataArray[i][this.fieldY];
+          dataPacked.x = this.dataArray[i][this.fieldX];
+          dataPacked.label = this.dataArray[i][this.fieldLabel];
+          dataPacked.pass = this.dataArray[i][this.fieldSize];
+          dataToScale.push(this.dataArray[i][this.fieldSize]);
+          if(this.dataArray[i][this.packingField]){
+            datasetPacked[this.dataArray[i][this.packingField]].push(dataPacked);
+          }
+        }
+        for(let valuePacker in datasetPacked){
+          let datasetPackedToChartProp = {
+            label : valuePacker,
+            data : datasetPacked[valuePacker],
+            backgroundColor: this.colors,
+            borderColor: [],
+            borderWidth: 1,
+          };
+          datasetsPackedToChartProp.push(datasetPackedToChartProp);
+        }
+        let maxOut = d3.max(Object.values(dataToScale));
+        let meanOut = d3.mean(Object.values(dataToScale));
+        let minOut = d3.min(Object.values(dataToScale));
+        let valued3 = d3
+            .scaleLinear(10)
+            .domain([minOut, meanOut, maxOut])
+            .range([5, 10, 20, 50]);
+        for(let v in datasetPacked){
+          for(let j=0; j < datasetPacked[v].length;j++){
+            datasetPacked[v][j].r = valued3(datasetPacked[v][j].pass);
+          }
+        }
+        return datasetsPackedToChartProp;
+      }
+    },
+    getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    },
   },
 };
 </script>
