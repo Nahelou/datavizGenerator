@@ -229,6 +229,13 @@ export default {
         this.colors.push(this.color)
       }
     },
+    getRandomColors(color, size){
+      let colors = [];
+      for(let i = 0; i < size; i++){
+        colors.push(color);
+      }
+      return colors;
+    },
     hexToRgbA(hex){
       var c;
       if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
@@ -246,9 +253,9 @@ export default {
       this.color = this.hexToRgbA(color);
     },
     processDataviz(){
+      document.getElementById("bubbleChart").innerHTML = "";
       this.getColors(this.dataArray);
       this.getChartData();
-      document.getElementById("bubbleChart").innerHTML = "";
       this.createChart("bubbleChart", this.bubbleChartData);
     },
     setPackingField(e){
@@ -324,7 +331,7 @@ export default {
           let datasetPackedToChartProp = {
             label : valuePacker,
             data : datasetPacked[valuePacker],
-            backgroundColor: this.colors,
+            backgroundColor: this.getRandomColors(this.randomRgbColor(), datasetPacked[valuePacker].length),
             borderColor: [],
             borderWidth: 1,
           };
@@ -345,13 +352,12 @@ export default {
         return datasetsPackedToChartProp;
       }
     },
-    getRandomColor() {
-      var letters = '0123456789ABCDEF';
-      var color = '#';
-      for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
+    randomRgbColor() {
+      var x = Math.floor(Math.random() * 256);
+      var y = Math.floor(Math.random() * 256);
+      var z = Math.floor(Math.random() * 256);
+      var bgColor = "rgb(" + x + "," + y + "," + z + ", 0.5)";
+      return bgColor;
     },
   },
 };
