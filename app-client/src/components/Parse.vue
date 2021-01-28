@@ -10,7 +10,14 @@
         <v-col class="mb-5" cols="12">
             <input type="file" @change="onFileChange">
             <v-card v-if="fileType" :key="fileType">
-                <v-card-title>Type de fichier :  {{ fileType }}</v-card-title>
+                <v-card-title>Type of your file :  {{ fileType }}</v-card-title>
+                    <v-text-field
+                        v-if="fileType == 'text/csv'"
+                        class="ml-5"
+                        v-model="fieldSeparator"
+                        @change="changeFieldSeparator"
+                        label="Field Separator" >
+                    </v-text-field>
                     <v-btn @click="$router.push({
                         name: 'Build',
                         params: {
@@ -63,6 +70,7 @@ export default {
         data : null,
         dataParsed : null,
         fields : null,
+        fieldSeparator : ',',
         fileTypesSupported : [
             "application/json",
             "application/geo+json",
@@ -81,6 +89,7 @@ export default {
             var reader = new FileReader();
             reader.onload = this.onReaderLoad;
             this.fileType = files[0].type;
+            this.file = files[0];
             if(this.fileType == "text/csv"){
                 reader.readAsBinaryString(files[0]);
             }
@@ -92,6 +101,13 @@ export default {
             }
             console.log(files[0].type);
             },
+        changeFieldSeparator(e){
+            console.log(e);
+            this.fieldSeparator = e;
+            var reader = new FileReader();
+            reader.onload = this.onReaderLoad;
+            reader.readAsBinaryString(this.file);
+        },
         onReaderLoad(event){
             this.data = event.target.result;
             if(this.fileType == "text/csv"){
@@ -179,7 +195,7 @@ export default {
 
             let newLinebrk = data.split("\n");
             for(let i = 0; i < newLinebrk.length; i++) {
-                parsedata.push(newLinebrk[i].split(","))
+                parsedata.push(newLinebrk[i].split(this.fieldSeparator))
             }
             return parsedata;
         },

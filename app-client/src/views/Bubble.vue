@@ -249,6 +249,7 @@ export default {
     processDataviz(){
       this.getColors(this.dataArray);
       this.getChartData();
+      document.getElementById("bubbleChart").innerHTML = "";
       this.createChart("bubbleChart", this.bubbleChartData);
     }
   },
