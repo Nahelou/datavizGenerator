@@ -9,6 +9,10 @@
           </v-select>
           <v-select :items="Object.keys(featuresFields)" label="Size" @change="getSizeValue" >
           </v-select>
+          <div>
+             <label for="colorpicker" class="mb-5" >Color :</label>
+             <input type="color" id="colorpicker" value="#0066ff" @change="changeColor" >
+          </div>
         <v-btn @click="processDataviz" right color="success" class="mb-10">
             Process
        </v-btn>
@@ -40,15 +44,14 @@ export default {
         fieldY: null,
         fieldLabel: null,
         fieldSize: null,
+        color: "rgba(0, 102, 255,.5)",
         };
   },
   created() {
     this.dataArray = this.$props.dataParsed;
     this.featuresFields= this.$props.fields;
   },
-mounted() {
-      console.log(JSON.parse(JSON.stringify(this.dataArray)));
-      console.log(JSON.parse(JSON.stringify(this.featuresFields)));
+  mounted() {
   },
   methods: {
     createChart(chartId, chartData) {
@@ -62,6 +65,7 @@ mounted() {
     getChartData(){
       let data = [];
       let dataToScale = [];
+      let that = this;
       console.log(this.fieldY)
       for(let i = 0; i < this.dataArray.length; i++){
           let dataOthers = {};
@@ -78,7 +82,7 @@ mounted() {
       let valued3 = d3
           .scaleLinear(10)
           .domain([minOut, meanOut, maxOut])
-          .range([5, 15, 30, 60]);
+          .range([5, 10, 20, 50]);
       for(let j=0; j<data.length;j++){
         data[j].r = valued3(data[j].pass);
       }
@@ -90,64 +94,7 @@ mounted() {
         {
           label:"Dataset",
           data,
-            backgroundColor: [
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-              "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-                "rgba(0, 102, 255,.5)",
-              ],
+            backgroundColor: this.colors,
               borderColor: [
               ],
               borderWidth: 1,
@@ -198,12 +145,12 @@ mounted() {
                       test = e;
                     }
                   });
-                    var label = test.label || ' : <br>' + this.fieldSize + ' : ' + test.pass;
+                    var label = test.label || ' : <br>' + test.x + ' : ' + test.pass;
                     if (label) {
                         label += ': ';
                     }
-                    label += this.fieldX + " : " + tooltipItem.xLabel;
-                    label += ";" + this.fieldY + " : " + tooltipItem.yLabel;
+                    label += that.fieldX + " : " + test.x;
+                    label += ";" + that.fieldY + " : " + test.y;
                     return label;
                 },
             },
@@ -277,10 +224,32 @@ mounted() {
     getSizeValue(e){
       this.fieldSize = e;
     },
+    getColors(e){
+      this.colors = [];
+      for(let i = 0; i<e.length; i++){
+        this.colors.push(this.color)
+      }
+    },
+    hexToRgbA(hex){
+      var c;
+      if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+          c= hex.substring(1).split('');
+          if(c.length== 3){
+              c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+          }
+          c= '0x'+c.join('');
+          return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.5)';
+      }
+      throw new Error('Bad Hex');
+    },
+    changeColor(e){
+      let color = e.target.value || e.srcElement.value;
+      this.color = this.hexToRgbA(color);
+    },
     processDataviz(){
-    this.getChartData();
-    console.log(this.bubbleChartData);
-    this.createChart("bubbleChart", this.bubbleChartData);
+      this.getColors(this.dataArray);
+      this.getChartData();
+      this.createChart("bubbleChart", this.bubbleChartData);
     }
   },
 };

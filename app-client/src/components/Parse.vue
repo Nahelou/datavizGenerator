@@ -1,6 +1,6 @@
 <template>
 <v-container>
-    <v-btn @click="$router.push('/')" center color="yellow">
+    <v-btn @click="$router.push('/')" center color="primary">
         Return home
     </v-btn>
     <v-row class="text-center">
@@ -88,7 +88,7 @@ export default {
                 reader.readAsText(files[0]);
             }
             else{
-                alert(`Sorry, type ${this.fileType} not supported: only CSV, Json and Geojon are for the moment`)
+                alert(`Sorry, ${this.fileType} types not supported: only CSV, Json and Geojon are currently supported`)
             }
             console.log(files[0].type);
             },
