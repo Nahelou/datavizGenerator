@@ -71,29 +71,7 @@ export default {
       });
     },
     getChartData(){
-      // let data = [];
-      // let dataToScale = [];
       let that = this;
-      // for(let i = 0; i < this.dataArray.length; i++){
-      //     let dataOthers = {};
-      //     dataOthers.y = this.dataArray[i][this.fieldY];
-      //     dataOthers.x = this.dataArray[i][this.fieldX];
-      //     dataOthers.label = this.dataArray[i][this.fieldLabel];
-      //     dataOthers.pass = this.dataArray[i][this.fieldSize];
-      //     dataToScale.push(this.dataArray[i][this.fieldSize]);
-      //     data.push(dataOthers);
-      // }
-      // let maxOut = d3.max(Object.values(dataToScale));
-      // let meanOut = d3.mean(Object.values(dataToScale));
-      // let minOut = d3.min(Object.values(dataToScale));
-      // let valued3 = d3
-      //     .scaleLinear(10)
-      //     .domain([minOut, meanOut, maxOut])
-      //     .range([5, 10, 20, 50]);
-      // for(let j=0; j<data.length;j++){
-      //   data[j].r = valued3(data[j].pass);
-      // }
-      // this.dataOthers = data;
       let d = that.getDatasetsForChart();
       this.bubbleChartData = {
       type: "bubble",
