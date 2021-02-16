@@ -228,7 +228,13 @@ export default {
       this.color = this.hexToRgbA(color);
     },
     processDataviz() {
-      document.getElementById("bubbleChart").innerHTML = "";
+      document.getElementById("graphCanvas").innerHTML = "";
+      let g = document.getElementById('graphCanvas');
+      let canvas = document.createElement('canvas');
+      canvas.id = "bubbleChart";
+
+      g.appendChild(canvas);
+
       this.getColors(this.dataArray);
       this.getChartData();
       this.createChart("bubbleChart", this.bubbleChartData);
