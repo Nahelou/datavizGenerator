@@ -20,7 +20,30 @@
     <v-btn @click="processDataviz" right color="success" class="mb-10">
       Process
     </v-btn>
-    <div id="graphCanvas">
+    <v-container v-if="isPackedData">
+      <v-row no-gutters>
+        <v-col cols="6" md="2" style="max-height: 500px; overflow-y:scroll">
+          <v-card class="pa-2" v-for="packingField in packingFieldData" :key="packingField">
+            <v-row no-gutters>
+              <v-col cols="6" md="6">
+                <span>{{packingField}}</span>
+              </v-col>
+              <v-col cols="6" md="5">
+                <input type="color" id="colorpicker" class="colorpicker" :value="'#'+randomHexColor()" @change="changeColor">
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="6" md="10">
+          <v-card class="pa-2">
+            <div id="graphCanvas">
+              <canvas id="bubbleChart"></canvas>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div v-if="!isPackedData" id="graphCanvas">
       <canvas id="bubbleChart"></canvas>
     </div>
   </v-container>
@@ -53,6 +76,7 @@ export default {
       color: "rgba(0, 102, 255,.5)",
       isPackedData: false,
       packingField: null,
+      packingFieldData: null,
     };
   },
   created() {
@@ -247,6 +271,7 @@ export default {
           this.packingFieldData.add(this.dataArray[i][e]);
         }
       }
+      console.log(this.packingFieldData);
     },
     isPacked() {
       if (this.packingField) {
@@ -305,6 +330,7 @@ export default {
             datasetPacked[this.dataArray[i][this.packingField]].push(dataPacked);
           }
         }
+        //build props for each dataset
         for (let valuePacker in datasetPacked) {
           let datasetPackedToChartProp = {
             label: valuePacker,
@@ -330,6 +356,7 @@ export default {
         return datasetsPackedToChartProp;
       }
     },
+    // get random rgb color
     randomRgbColor() {
       var x = Math.floor(Math.random() * 256);
       var y = Math.floor(Math.random() * 256);
@@ -337,6 +364,11 @@ export default {
       var bgColor = "rgb(" + x + "," + y + "," + z + ", 0.5)";
       return bgColor;
     },
+
+    //randomHexColor
+    randomHexColor() {
+      return Math.floor(Math.random()*16777215).toString(16);
+    }
   },
 };
 </script>
