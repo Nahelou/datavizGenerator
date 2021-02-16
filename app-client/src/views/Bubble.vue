@@ -26,10 +26,10 @@
           <v-card class="pa-2" v-for="packingField in packingFieldData" :key="packingField">
             <v-row no-gutters>
               <v-col cols="6" md="6">
-                <span>{{packingField}}</span>
+                <span>{{packingField}} + {{packingFieldColors[packingField].rgb()}}</span>
               </v-col>
               <v-col cols="6" md="5">
-                <input type="color" id="colorpicker" class="colorpicker" :value="'#'+randomHexColor()" @change="changeColor">
+                <input type="color" id="colorpicker" class="colorpicker" :value="'#'+packingFieldColors[packingField].hex" @change="changeColor">
               </v-col>
             </v-row>
           </v-card>
@@ -77,6 +77,7 @@ export default {
       isPackedData: false,
       packingField: null,
       packingFieldData: null,
+      packingFieldColors: {},
     };
   },
   created() {
@@ -263,12 +264,20 @@ export default {
       this.getChartData();
       this.createChart("bubbleChart", this.bubbleChartData);
     },
+
+    // create packing field unique value and correspondance color
     setPackingField(e) {
+      this.packingFieldColors = {};
       this.packingField = e;
       this.packingFieldData = new Set();
       for (let i = 0; i < this.dataArray.length; i++) {
         if (this.dataArray[i][e]) {
           this.packingFieldData.add(this.dataArray[i][e]);
+          const colors = {
+            hex : this.randomHexColor,
+            rgb : () => this.hexToRgbA(colors.hex),
+          }
+          this.packingFieldColors[this.dataArray[i][e]] = colors;
         }
       }
       console.log(this.packingFieldData);
@@ -335,7 +344,7 @@ export default {
           let datasetPackedToChartProp = {
             label: valuePacker,
             data: datasetPacked[valuePacker],
-            backgroundColor: this.getRandomColors(this.randomRgbColor(), datasetPacked[valuePacker].length),
+            backgroundColor: this.getRandomColors(this.packingFieldColors[valuePacker].rgb(), datasetPacked[valuePacker].length),
             borderColor: [],
             borderWidth: 1,
           };
@@ -364,7 +373,6 @@ export default {
       var bgColor = "rgb(" + x + "," + y + "," + z + ", 0.5)";
       return bgColor;
     },
-
     //randomHexColor
     randomHexColor() {
       return Math.floor(Math.random()*16777215).toString(16);
