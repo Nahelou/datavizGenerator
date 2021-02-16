@@ -26,7 +26,7 @@
           <v-card class="pa-2" v-for="packingField in packingFieldData" :key="packingField">
             <v-row no-gutters>
               <v-col cols="6" md="6">
-                <span>{{packingField}} + {{packingFieldColors[packingField].rgb()}}</span>
+                <span>{{packingField}} + {{packingFieldColors[packingField].rgb}}</span>
               </v-col>
               <v-col cols="6" md="5">
                 <input type="color" id="colorpicker" class="colorpicker" :value="'#'+packingFieldColors[packingField].hex" @change="changeColor">
@@ -237,6 +237,7 @@ export default {
       return colors;
     },
     hexToRgbA(hex) {
+      console.log(hex);
       var c;
       if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
         c = hex.substring(1).split('');
@@ -266,16 +267,19 @@ export default {
     },
 
     // create packing field unique value and correspondance color
+    // @TODO create colors
     setPackingField(e) {
       this.packingFieldColors = {};
       this.packingField = e;
       this.packingFieldData = new Set();
+      const that = this;
       for (let i = 0; i < this.dataArray.length; i++) {
         if (this.dataArray[i][e]) {
           this.packingFieldData.add(this.dataArray[i][e]);
+          const color = that.randomHexColor();
           const colors = {
-            hex : this.randomHexColor,
-            rgb : () => this.hexToRgbA(colors.hex),
+            hex : color,
+            rgb : that.hexToRgbA('#' + color),
           }
           this.packingFieldColors[this.dataArray[i][e]] = colors;
         }
