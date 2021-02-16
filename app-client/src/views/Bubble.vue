@@ -69,9 +69,8 @@ export default {
         options: chartData.options,
       });
     },
-    getChartData() {
+    getChartData(){
       let that = this;
-
       let d = that.getDatasetsForChart();
       this.bubbleChartData = {
         type: "bubble",
