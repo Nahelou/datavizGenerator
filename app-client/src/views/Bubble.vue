@@ -20,9 +20,9 @@
     <v-btn @click="processDataviz" right color="success" class="mb-10">
       Process
     </v-btn>
-    <v-container v-if="isPackedData">
+    <v-container v-if="isPackedData" style="max-height: 1000px">
       <v-row no-gutters>
-        <v-col cols="6" md="2" style="max-height: 500px; overflow-y:scroll">
+        <v-col cols="6" md="2" style="max-height: 700px; overflow-y:scroll">
           <v-card class="pa-2" v-for="packingField in packingFieldData" :key="packingField">
             <v-row no-gutters>
               <v-col cols="6" md="6">
