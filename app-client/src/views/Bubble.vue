@@ -291,6 +291,7 @@ export default {
     },
     getDatasetsForChart() {
       let datasets = [];
+      //data scale for the bubbles
       let dataToScale = [];
       if (this.packingField == null) {
         for (let i = 0; i < this.dataArray.length; i++) {
@@ -319,8 +320,8 @@ export default {
           backgroundColor: this.colors,
           borderColor: [],
           borderWidth: 1,
-        }, ];
-        console.log(dataset);
+          }, 
+          ];
         return dataset;
       } else {
         let datasetsPackedToChartProp = [];
@@ -329,6 +330,7 @@ export default {
           datasetPacked[field] = [];
         })
 
+        // for each data, push it(prepared with x y label) in the correspondant's field object (datasetPacked[my data packing field value]) 
         for (let i = 0; i < this.dataArray.length; i++) {
           let dataPacked = {};
           dataPacked.y = this.dataArray[i][this.fieldY];
@@ -351,6 +353,7 @@ export default {
           };
           datasetsPackedToChartProp.push(datasetPackedToChartProp);
         }
+        //build the function to get a scale
         let maxOut = d3.max(Object.values(dataToScale));
         let meanOut = d3.mean(Object.values(dataToScale));
         let minOut = d3.min(Object.values(dataToScale));
@@ -358,6 +361,7 @@ export default {
           .scaleLinear(10)
           .domain([minOut, meanOut, maxOut])
           .range([5, 10, 20, 50]);
+        // parse the dataset to calculate radius based on the scale
         for (let v in datasetPacked) {
           for (let j = 0; j < datasetPacked[v].length; j++) {
             datasetPacked[v][j].r = valued3(datasetPacked[v][j].pass);
