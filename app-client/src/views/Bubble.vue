@@ -94,6 +94,7 @@ export default {
         options: chartData.options,
       });
     },
+    //function to get chart data based on the selected parameters
     getChartData(){
       let that = this;
       let d = that.getDatasetsForChart();
