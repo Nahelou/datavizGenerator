@@ -29,7 +29,7 @@
                 <span>{{packingField}}</span>
               </v-col>
               <v-col cols="6" md="5">
-                <input type="color" id="colorpicker" class="colorpicker" :value="packingFieldColors[packingField].hex" @change="changeColor">
+                <input type="color" :id="packingField" class="colorpicker" :value="packingFieldColors[packingField].hex" @change="changePackingFieldColor">
               </v-col>
             </v-row>
           </v-card>
@@ -248,10 +248,6 @@ export default {
       }
       throw new Error('Bad Hex');
     },
-    changeColor(e) {
-      let color = e.target.value || e.srcElement.value;
-      this.color = this.hexToRgbA(color);
-    },
     processDataviz() {
       document.getElementById("graphCanvas").innerHTML = "";
       let g = document.getElementById('graphCanvas');
@@ -370,6 +366,12 @@ export default {
         return datasetsPackedToChartProp;
       }
     },
+    // change color of the dataviz (for just one color)
+    changeColor(e) {
+      let color = e.target.value || e.srcElement.value;
+      this.color = this.hexToRgbA(color);
+      return ;
+    },
     // get random rgb color
     randomRgbColor() {
       var x = Math.floor(Math.random() * 256);
@@ -381,6 +383,14 @@ export default {
     //randomHexColor
     randomHexColor() {
       return '#' + Math.floor(Math.random()*16777215).toString(16);
+    },
+    //change color of the packing field (by value)
+    changePackingFieldColor(e){
+      let color = e.target.value || e.srcElement.value;
+      let id = e.target.value.id || e.srcElement.id;
+      this.packingFieldColors[id].rgb = this.hexToRgbA(color);
+      this.processDataviz();
+      return ;
     }
   },
 };
