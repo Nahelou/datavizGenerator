@@ -26,10 +26,10 @@
           <v-card class="pa-2" v-for="packingField in packingFieldData" :key="packingField">
             <v-row no-gutters>
               <v-col cols="6" md="6">
-                <span>{{packingField}} + {{packingFieldColors[packingField].rgb}}</span>
+                <span>{{packingField}}</span>
               </v-col>
               <v-col cols="6" md="5">
-                <input type="color" id="colorpicker" class="colorpicker" :value="'#'+packingFieldColors[packingField].hex" @change="changeColor">
+                <input type="color" id="colorpicker" class="colorpicker" :value="packingFieldColors[packingField].hex" @change="changeColor">
               </v-col>
             </v-row>
           </v-card>
@@ -237,7 +237,6 @@ export default {
       return colors;
     },
     hexToRgbA(hex) {
-      console.log(hex);
       var c;
       if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
         c = hex.substring(1).split('');
@@ -276,11 +275,13 @@ export default {
       for (let i = 0; i < this.dataArray.length; i++) {
         if (this.dataArray[i][e]) {
           this.packingFieldData.add(this.dataArray[i][e]);
-          const color = that.randomHexColor();
+          const color = '#' + (function co(lor){   return (lor +=
+          [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)])
+          && (lor.length == 6) ?  lor : co(lor); })('');
           const colors = {
             hex : color,
-            rgb : that.hexToRgbA('#' + color),
-          }
+            rgb : that.hexToRgbA(color),
+          };
           this.packingFieldColors[this.dataArray[i][e]] = colors;
         }
       }
@@ -348,7 +349,7 @@ export default {
           let datasetPackedToChartProp = {
             label: valuePacker,
             data: datasetPacked[valuePacker],
-            backgroundColor: this.getRandomColors(this.packingFieldColors[valuePacker].rgb(), datasetPacked[valuePacker].length),
+            backgroundColor: this.getRandomColors(this.packingFieldColors[valuePacker].rgb, datasetPacked[valuePacker].length),
             borderColor: [],
             borderWidth: 1,
           };
@@ -379,7 +380,7 @@ export default {
     },
     //randomHexColor
     randomHexColor() {
-      return Math.floor(Math.random()*16777215).toString(16);
+      return '#' + Math.floor(Math.random()*16777215).toString(16);
     }
   },
 };
